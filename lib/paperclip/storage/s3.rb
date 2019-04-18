@@ -354,7 +354,13 @@ module Paperclip
           begin
             log("saving #{path(style)}")
             write_options = {
-              :content_type => file.content_type,
+              # Relying on lib/paperclip/attachment.rb's computed "content_type" vs. "file.content_type".
+              # This allows the content_type passed to S3 to be overridden along with the property on the attachment's instance (a FileDocument).
+              #
+              # (https://github.com/thoughtbot/paperclip/issues/634)
+              #
+              # -AW
+              :content_type => content_type,
               :acl => s3_permissions(style)
             }
 
